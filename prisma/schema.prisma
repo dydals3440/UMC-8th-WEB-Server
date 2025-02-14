@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 Int        @id @default(autoincrement())
+  email              String     @unique
+  password           String
+  name               String?
+  profileImageUrl    String?
+  hashedRefreshToken String?
+  role               String     @default("USER")
+  isDeleted          Boolean    @default(false)
+
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  deletedAt          DateTime?
+
+  // 관계
+  LPs        LP[]        // 사용자는 여러 LP를 생성할 수 있습니다
+  comments   Comment[]   // 사용자는 여러 댓글을 작성할 수 있습니다
+  bookmarks  Bookmark[]  // 사용자는 여러 LP를 북마크할 수 있습니다
+  likes      Like[]      // 사용자는 여러 LP를 좋아할 수 있습니다
+}
+
+model LP {
+  id        Int         @id @default(autoincrement())
+  title     String
+  description   String?
+
+  // 이 LP를 생성한 사용자와의 관계
+  author    User        @relation(fields: [authorId], references: [id])
+  authorId  Int
+
+  // 카테고리와의 관계
+  category   Category   @relation(fields: [categoryId], references: [id])
+  // TODO: sqlite를 사용하지 않으면, 카테고리 아이디를 이넘 형태로 받게합니다.
+  // UMC 자료에서는 디비 연결하면 어렵기에 일단 카테고리 아이디를 먼저 만드는 형태로 강의를 준비합니다.
+  categoryId Int
+
+  // 댓글과의 관계
+  comments  Comment[]
+
+  // 북마크와의 관계
+  bookmarks Bookmark[]
+
+  // 좋아요와의 관계
+  likes     Like[]
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+
+  // 이 댓글을 작성한 사용자와의 관계
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+
+  // 이 댓글이 달린 LP와의 관계
+  lp        LP       @relation(fields: [lpId], references: [id])
+  lpId      Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Bookmark {
+  id        Int      @id @default(autoincrement())
+
+  // 북마크한 사용자와의 관계
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+
+  // 북마크된 LP와의 관계
+  lp        LP       @relation(fields: [lpId], references: [id])
+  lpId      Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, lpId])
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+
+  // 좋아요를 누른 사용자와의 관계
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+
+  // 좋아요가 눌린 LP와의 관계
+  lp        LP       @relation(fields: [lpId], references: [id])
+  lpId      Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, lpId])
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+
+  // 카테고리에 속한 LP들과의 관계
+  LPs       LP[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
