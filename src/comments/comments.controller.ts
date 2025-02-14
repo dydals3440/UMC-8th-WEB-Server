@@ -9,10 +9,13 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentDto } from 'src/comments/dto/create-comment-dto';
 import { UpdateCommentDto } from 'src/comments/dto/update-comment-dto';
 
+@ApiTags('comments')
+@ApiBearerAuth()
 @Controller('lps/:lpId/comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}

@@ -16,7 +16,9 @@ import { RefreshAuthGuard } from 'src/auth/guards/refresh-auth/refresh-auth.guar
 import { GoogleAuthGuard } from 'src/auth/guards/google-auth/google-auth.guard';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -36,6 +38,7 @@ export class AuthController {
   }
 
   @Roles('ADMIN', 'EDITOR')
+  @ApiBearerAuth()
   @Get('protected')
   getAll(@Request() req) {
     return `Now you can access this protected API, ${req.user.id}`;
@@ -43,6 +46,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(RefreshAuthGuard)
+  @ApiBearerAuth()
   @Post('refresh')
   refreshToken(@Request() req) {
     return this.authService.refreshToken(req.user.id, req.user.name);
@@ -65,6 +69,7 @@ export class AuthController {
   }
 
   @Post('signout')
+  @ApiBearerAuth()
   signOut(@Req() req) {
     return this.authService.signOut(req.user.id);
   }
