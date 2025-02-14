@@ -9,6 +9,7 @@ import { LpsModule } from './lps/lps.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CommentsModule } from './comments/comments.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
+import { LikesModule } from './likes/likes.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { BookmarksModule } from './bookmarks/bookmarks.module';
     CategoriesModule,
     CommentsModule,
     BookmarksModule,
+    LikesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
