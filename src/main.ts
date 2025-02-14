@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ResponseTimeInterceptor } from 'src/common/interceptor/response-time.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,6 +31,7 @@ async function bootstrap() {
     },
   });
 
+  app.useGlobalInterceptors(new ResponseTimeInterceptor());
   await app.listen(process.env.PORT ?? 8000);
   app.useGlobalPipes(
     new ValidationPipe({

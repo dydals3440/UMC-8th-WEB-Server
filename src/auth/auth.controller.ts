@@ -41,7 +41,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   login(@Request() req) {
-    console.log('요청', req);
     return this.authService.login(req.user.id, req.user.name);
   }
 
@@ -84,11 +83,10 @@ export class AuthController {
   @Public()
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleCallback(@Request() req, @Res() res) {
-    // console.log('', req.user);
+  async googleCallback(@Request() req: any, @Res() res: any) {
     const response = await this.authService.login(req.user.id, req.user.name);
     res.redirect(
-      `http://localhost:3000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`,
+      `http://localhost:8ㅓㅗ호ㅛㅛㅓㅜ76000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`,
     );
   }
 
@@ -98,7 +96,7 @@ export class AuthController {
   })
   @Post('signout')
   @ApiBearerAuth()
-  signOut(@Req() req) {
+  signOut(@Req() req: any) {
     return this.authService.signOut(req.user.id);
   }
 }
