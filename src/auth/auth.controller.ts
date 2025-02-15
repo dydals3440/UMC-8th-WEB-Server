@@ -16,7 +16,14 @@ import { RefreshAuthGuard } from 'src/auth/guards/refresh-auth/refresh-auth.guar
 import { GoogleAuthGuard } from 'src/auth/guards/google-auth/google-auth.guard';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { UserSignupResponse } from 'src/auth/dto/signup-user-response.dto';
+import { UserLoginResponse } from 'src/auth/dto/login-user-response.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -28,6 +35,7 @@ export class AuthController {
     summary: '회원가입',
     description: '새로운 사용자를 등록합니다.',
   })
+  @ApiCreatedResponse({ type: UserSignupResponse, description: '성공' })
   @Post('signup')
   registerUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
@@ -38,9 +46,10 @@ export class AuthController {
     summary: '로그인',
     description: '로그인을 진행합니다.',
   })
+  @ApiCreatedResponse({ type: UserLoginResponse, description: '성공' })
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  login(@Request() req) {
+  login(@Request() req: any) {
     return this.authService.login(req.user.id, req.user.name);
   }
 

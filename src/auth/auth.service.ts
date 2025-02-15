@@ -10,6 +10,7 @@ import { hash, verify } from 'argon2';
 import refreshConfig from 'src/auth/config/refresh.config';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import { AuthJwtPayload } from 'src/auth/types/auth-jwtPayload';
+import { exclude } from 'src/common/utils/exclude';
 import { UserService } from 'src/users/user.service';
 
 @Injectable()
@@ -28,7 +29,8 @@ export class AuthService {
       throw new ConflictException('이미 존재하는 유저입니다.');
     }
 
-    return this.userService.create(createUserDto);
+    const newUser = await this.userService.create(createUserDto);
+    return exclude(newUser, ['password', 'hashedRefreshToken']);
   }
 
   async validateLocalUser(email: string, password: string) {
