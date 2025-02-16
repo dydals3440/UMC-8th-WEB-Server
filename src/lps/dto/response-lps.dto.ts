@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BookmarkResponseDto } from 'src/bookmarks/dto/response-bookmark-dto';
-import { CategoryResponseDto } from 'src/categories/dto/response-category-dto';
+import { BookmarkResponseDto } from 'src/bookmarks/dto/response-bookmark.dto';
+import { CategoryResponseDto } from 'src/categories/dto/response-category.dto';
 import { LikeResponseDto } from 'src/likes/dto/response-like-dto';
 import { UserResponseDto } from 'src/users/dto/response-user.dto';
 

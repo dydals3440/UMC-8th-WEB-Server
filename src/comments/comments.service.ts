@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCommentDto } from 'src/comments/dto/create-comment-dto';
-import { UpdateCommentDto } from 'src/comments/dto/update-comment-dto';
+import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { UpdateCommentDto } from 'src/comments/dto/update-comment.dto';
 import { LpsService } from 'src/lps/lps.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -74,7 +74,11 @@ export class CommentsService {
       where: {
         lpId,
       },
-      include: {
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
         user: {
           select: {
             id: true,
@@ -100,7 +104,9 @@ export class CommentsService {
       },
     });
 
-    return commentId;
+    return {
+      id: commentId,
+    };
   }
 
   async updateComment(

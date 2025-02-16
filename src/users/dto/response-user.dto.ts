@@ -27,4 +27,10 @@ export class UserResponseDto {
     enum: ['USER', 'ADMIN', 'EDITOR'],
   })
   role: string;
+
+  @ApiProperty({
+    example: false,
+    description: '탈퇴한 회원 여부',
+  })
+  isDeleted: boolean;
 }

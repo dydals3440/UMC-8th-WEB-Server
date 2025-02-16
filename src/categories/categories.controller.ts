@@ -7,8 +7,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CategoriesService } from 'src/categories/categories.service';
-import { CreateCategoryDto } from 'src/categories/dto/create-category-dto';
-import { CategoryResponseDto } from 'src/categories/dto/response-category-dto';
+import { CreateCategoryDto } from 'src/categories/dto/create-category.dto';
+import { CategoryResponseDto } from 'src/categories/dto/response-category.dto';
 import { CategoryEntity } from 'src/categories/entity/category.entity';
 
 @ApiTags('categories')
