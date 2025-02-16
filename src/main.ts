@@ -22,7 +22,6 @@ async function bootstrap() {
     .setDescription('UMC 8th 강의 자료를 위한 자체 제작 LP 스토어 서버입니다.')
     .setVersion('1.0')
     .addBearerAuth()
-    .addBasicAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory, {

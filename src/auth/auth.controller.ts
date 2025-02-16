@@ -18,12 +18,15 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserSignupResponse } from 'src/auth/dto/signup-user-response.dto';
 import { UserLoginResponse } from 'src/auth/dto/login-user-response.dto';
+import { LoginUserDto } from 'src/auth/dto/login-user.dto';
+import { RefreshDto } from 'src/auth/dto/refresh.dto';
+import { UserLogoutResponse } from 'src/auth/dto/logout-response.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -33,9 +36,12 @@ export class AuthController {
   @Public()
   @ApiOperation({
     summary: '회원가입',
-    description: '새로운 사용자를 등록합니다.',
+    description:
+      '새로운 사용자를 등록합니다. role을 body에 전달하지 않을 때 기본 권한은 USER 입니다. profileImageUrl은 넘겨도, 안넘겨도 됩니다.',
   })
-  @ApiCreatedResponse({ type: UserSignupResponse, description: '성공' })
+  @ApiBody({
+    type: CreateUserDto,
+  })
   @Post('signup')
   registerUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.registerUser(createUserDto);
@@ -44,7 +50,10 @@ export class AuthController {
   @Public()
   @ApiOperation({
     summary: '로그인',
-    description: '로그인을 진행합니다.',
+    description: 'email, password를 통해 로그인을 진행합니다.',
+  })
+  @ApiBody({
+    type: LoginUserDto,
   })
   @ApiCreatedResponse({ type: UserLoginResponse, description: '성공' })
   @UseGuards(LocalAuthGuard)
@@ -67,6 +76,9 @@ export class AuthController {
   @ApiOperation({
     summary: '토큰 재발급',
     description: 'body에 refreshToken을 제공하면, Access Token을 재발급합니다.',
+  })
+  @ApiBody({
+    type: RefreshDto,
   })
   @Public()
   @UseGuards(RefreshAuthGuard)
@@ -95,13 +107,17 @@ export class AuthController {
   async googleCallback(@Request() req: any, @Res() res: any) {
     const response = await this.authService.login(req.user.id, req.user.name);
     res.redirect(
-      `http://localhost:8ㅓㅗ호ㅛㅛㅓㅜ76000/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`,
+      `http://localhost:5173/api/auth/google/callback?userId=${response.id}&name=${response.name}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`,
     );
   }
 
   @ApiOperation({
     summary: '로그아웃',
     description: '로그아웃을 진행합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '로그아웃 성공',
+    type: UserLogoutResponse,
   })
   @Post('signout')
   @ApiBearerAuth()

@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
-    example: '유저 이름',
+    example: '매튜',
     description: '회원가입 유저 이름',
   })
   @IsNotEmpty()
@@ -20,7 +20,7 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({
-    example: 'smu123!!',
+    example: 'Smu123!!',
     description: '회원가입 유저 비밀번호',
   })
   @IsNotEmpty()
